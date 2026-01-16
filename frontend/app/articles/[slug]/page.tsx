@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import DOMPurify from 'isomorphic-dompurify';
 import { getArticleBySlug } from '@/lib/strapi';
 
 export default async function ArticlePage({
@@ -19,6 +20,8 @@ export default async function ArticlePage({
   if (!article) {
     notFound();
   }
+
+  const sanitizedContent = DOMPurify.sanitize(article.content);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -90,7 +93,7 @@ export default async function ArticlePage({
 
             <div 
               className="prose prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ __html: article.content }}
+              dangerouslySetInnerHTML={{ __html: sanitizedContent }}
             />
           </div>
         </article>

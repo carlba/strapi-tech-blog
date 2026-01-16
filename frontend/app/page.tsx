@@ -90,11 +90,10 @@ export default async function Home() {
                     <p className="text-gray-600 mb-4">{article.excerpt}</p>
                   )}
                   <div className="flex items-center text-sm text-gray-500">
-                    {article.author && (
-                      <span>{article.author.name}</span>
-                    )}
+                    {article.author && <span>{article.author.name}</span>}
+                    {article.author && article.publishedDate && <span className="mx-2">•</span>}
                     {article.publishedDate && (
-                      <span className="ml-3">
+                      <span>
                         {new Date(article.publishedDate).toLocaleDateString()}
                       </span>
                     )}

@@ -107,6 +107,16 @@ The Strapi backend runs on port 1337 by default. You can customize this in `back
 
 The Next.js frontend runs on port 3000 by default. It fetches data from the Strapi API at runtime.
 
+### Docker Development
+
+You can also run both services using Docker Compose:
+
+```bash
+docker-compose up
+```
+
+**Note:** When using Docker Compose, the frontend uses `http://backend:1337` for internal container communication. The services are still accessible from your host machine at `http://localhost:3000` (frontend) and `http://localhost:1337` (backend).
+
 ## Deployment
 
 ### Backend Deployment
