@@ -2,6 +2,25 @@
 
 A modern tech blog built with Next.js and Strapi CMS.
 
+## Quick Start
+
+```bash
+# Terminal 1 - Start the backend
+cd backend
+npm install
+npm run develop
+
+# Terminal 2 - Start the frontend  
+cd frontend
+npm install
+npm run dev
+```
+
+Then:
+1. Visit http://localhost:1337/admin to create your admin user
+2. Configure API permissions in Strapi (Settings > Users & Permissions Plugin > Roles > Public)
+3. Visit http://localhost:3000 to see your blog
+
 ## Project Structure
 
 This project consists of two main parts:
