@@ -1,86 +1,166 @@
-# typescript-template
+# Strapi Tech Blog
 
-A template for a Typescript repository
+A modern tech blog built with Next.js and Strapi CMS, featuring HeroUI components and the official Strapi SDK.
 
-## ESLint Setup
+## Quick Start
 
-```javascript
-module.exports = {
-  env: {
-    es2022: true,
-    node: true,
-  },
-  overrides: [
-    {
-      files: ['**/*.js'],
-      extends: ['eslint:recommended'],
-      // https://eslint.org/docs/v8.x/use/configure/language-options#specifying-parser-options
-      parserOptions: {
-        ecmaVersion: '2022',
-      },
-    },
-    {
-      files: ['src**/*.ts'],
-      extends: [
-        'eslint:recommended',
-        'plugin:@typescript-eslint/recommended-type-checked',
-        'plugin:@typescript-eslint/stylistic-type-checked',
-      ],
-      plugins: ['@typescript-eslint'],
-      parser: '@typescript-eslint/parser',
-      parserOptions: {
-        project: true,
-      },
-    },
-  ],
-};
+```bash
+# Terminal 1 - Start the backend
+cd backend
+npm install
+npm run develop
+
+# Terminal 2 - Start the frontend  
+cd frontend
+npm install
+npm run dev
 ```
 
-The newest version of ESLint is using the new `flatconfig` format. Even though it looks cool sadly
+Then:
+1. Visit http://localhost:1337/admin to create your admin user
+2. Configure API permissions in Strapi (Settings > Users & Permissions Plugin > Roles > Public)
+3. Visit http://localhost:3000 to see your blog
 
-the adaptation of it in the community has not yet reached to the point where it makes sense to start
+## Project Structure
 
-using it. That is why this repo uses the `8.57.0` version which still defaults to the old config
+This project consists of two main parts:
 
-file format. It has some consequences.
+- **Backend**: Strapi CMS (`/backend`)
+- **Frontend**: Next.js application (`/frontend`)
 
-1. The file has to be in CommonJS format since version `8.57.0` doesn't support anything else
-2. The support both JS and Typescript by using the overrides property.
-3. Note that the `module.exports.overrides[0].parserOptions` needs to have a higher ECMA version
+## Features
 
-   specified as the default is `ES5`. For the Typescript configuration this is not needed as it
+- 📝 Create and manage blog articles
+- 👤 Author profiles
+- 🏷️ Category organization
+- 🖼️ Image uploads for cover images and avatars
+- 📱 Responsive design with Tailwind CSS and HeroUI components
+- 🚀 Server-side rendering with Next.js
+- 🔌 Official Strapi SDK for type-safe API calls
 
-   reads the settings from the `tsconfig` when `module.exports.overrides[1].parserOptions.project`
+## Getting Started
 
-   is set to `true`
+### Prerequisites
 
-## Why is nodemon Used Over tsx watch
+- Node.js 20.x or higher
+- npm 6.x or higher
 
-Because `tsx watch` does not support watching .env file.
+### Backend Setup (Strapi)
 
-## Migration from Jest to Vitest
-
-1. Uninstall Jest
-
+1. Navigate to the backend directory:
    ```bash
-   npm uninstall jest @types/jest
-   npm install -D vitest
+   cd backend
    ```
 
-1. Configure Vitest
-
-   [vitest config in the repo](vitest.config.ts)
-
-1. Update package.json with test commands referencing `vitest` rather than `jest`
-
-   ```json
-   {
-     "scripts": {
-       "test": "vitest run",
-       "test:watch": "vitest watch",
-       "test:coverage": "vitest run --coverage"
-     }
-   }
+2. Install dependencies:
+   ```bash
+   npm install
    ```
 
-1. And ensure to add `import { describe, it, expect } from 'vitest';` at the top of test cases.
+3. Start the Strapi development server:
+   ```bash
+   npm run develop
+   ```
+
+4. The Strapi admin panel will be available at http://localhost:1337/admin
+
+5. Create your first admin user when prompted
+
+6. Configure content permissions:
+   - Go to Settings > Users & Permissions Plugin > Roles > Public
+   - Enable find and findOne permissions for Articles, Authors, and Categories
+
+### Frontend Setup (Next.js)
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Create a `.env.local` file (if not already created):
+   ```bash
+   NEXT_PUBLIC_STRAPI_URL=http://localhost:1337
+   ```
+
+4. Start the Next.js development server:
+   ```bash
+   npm run dev
+   ```
+
+5. Open http://localhost:3000 in your browser
+
+## Content Types
+
+### Article
+- Title
+- Slug (auto-generated from title)
+- Content (rich text)
+- Excerpt
+- Cover Image
+- Author (relation to Author)
+- Categories (relation to Category)
+- Published Date
+
+### Author
+- Name
+- Email
+- Bio
+- Avatar
+
+### Category
+- Name
+- Slug (auto-generated from name)
+- Description
+
+## Development
+
+### Backend Development
+
+The Strapi backend runs on port 1337 by default. You can customize this in `backend/config/server.ts`.
+
+### Frontend Development
+
+The Next.js frontend runs on port 3000 by default. It fetches data from the Strapi API at runtime.
+
+### Docker Development
+
+You can also run both services using Docker Compose:
+
+```bash
+docker-compose up
+```
+
+**Note:** When using Docker Compose, the frontend uses `http://backend:1337` for internal container communication. The services are still accessible from your host machine at `http://localhost:3000` (frontend) and `http://localhost:1337` (backend).
+
+## Deployment
+
+### Backend Deployment
+
+Strapi can be deployed to various platforms:
+- Railway
+- Heroku
+- DigitalOcean
+- AWS
+- Self-hosted
+
+Refer to the [Strapi deployment documentation](https://docs.strapi.io/dev-docs/deployment) for detailed instructions.
+
+### Frontend Deployment
+
+The Next.js frontend can be deployed to:
+- Vercel (recommended)
+- Netlify
+- AWS Amplify
+- Self-hosted
+
+Update the `NEXT_PUBLIC_STRAPI_URL` environment variable to point to your production Strapi instance.
+
+## License
+
+UNLICENSED
+

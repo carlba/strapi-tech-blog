@@ -1,0 +1,33 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../Dockerfile.backend
+    ports:
+      - "1337:1337"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_CLIENT=sqlite
+      - DATABASE_FILENAME=.tmp/data.db
+      - CORS_ORIGINS=http://localhost:3000,http://frontend:3000
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: npm run develop
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_STRAPI_URL=http://backend:1337
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    command: npm run dev
+    depends_on:
+      - backend
+

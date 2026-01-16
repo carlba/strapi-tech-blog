@@ -1,3 +1,21 @@
 node_modules
 dist
 .env
+
+# Backend (Strapi)
+backend/.env
+backend/.cache
+backend/build
+backend/dist
+backend/.tmp
+backend/public/uploads
+backend/database/data.db
+
+# Frontend (Next.js)
+frontend/.next
+frontend/out
+frontend/.env.local
+frontend/.env.production.local
+frontend/.env.development.local
+frontend/.env.test.local
+
