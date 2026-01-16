@@ -1,4 +1,11 @@
+import { strapi as strapiClient } from '@strapi/client';
+
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
+
+// Initialize Strapi SDK client
+const strapi = strapiClient({
+  baseURL: STRAPI_URL,
+});
 
 export interface Article {
   id: number;
@@ -48,89 +55,76 @@ export interface Author {
   };
 }
 
-async function fetchAPI(path: string, options?: RequestInit) {
-  const url = `${STRAPI_URL}/api${path}`;
-  
-  try {
-    const headers: HeadersInit = {
-      ...options?.headers,
-    };
-    
-    // Only set Content-Type for requests with a body
-    if (options?.body) {
-      headers['Content-Type'] = 'application/json';
-    }
-    
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('API Error:', error);
-    throw error;
-  }
-}
-
 export async function getArticles(params?: {
   populate?: string[];
   filters?: Record<string, unknown>;
   sort?: string[];
   pagination?: { page?: number; pageSize?: number };
 }) {
-  const searchParams = new URLSearchParams();
-  
-  if (params?.populate) {
-    params.populate.forEach(field => {
-      searchParams.append('populate', field);
-    });
-  }
-  
-  if (params?.sort) {
-    params.sort.forEach(field => {
-      searchParams.append('sort', field);
-    });
-  }
-  
-  if (params?.pagination) {
-    if (params.pagination.page) {
-      searchParams.append('pagination[page]', params.pagination.page.toString());
+  try {
+    const queryParams: Record<string, unknown> = {};
+    
+    if (params?.populate) {
+      queryParams.populate = params.populate;
     }
-    if (params.pagination.pageSize) {
-      searchParams.append('pagination[pageSize]', params.pagination.pageSize.toString());
+    
+    if (params?.sort) {
+      queryParams.sort = params.sort;
     }
+    
+    if (params?.pagination) {
+      queryParams.pagination = params.pagination;
+    }
+    
+    if (params?.filters) {
+      queryParams.filters = params.filters;
+    }
+    
+    const response = await strapi.find('articles', queryParams);
+    return response.data as Article[];
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+    throw error;
   }
-  
-  const queryString = searchParams.toString();
-  const path = `/articles${queryString ? `?${queryString}` : ''}`;
-  
-  const response = await fetchAPI(path);
-  return response.data as Article[];
 }
 
 export async function getArticleBySlug(slug: string, populate: string[] = []) {
-  const searchParams = new URLSearchParams();
-  searchParams.append('filters[slug][$eq]', slug);
-  
-  populate.forEach(field => {
-    searchParams.append('populate', field);
-  });
-  
-  const response = await fetchAPI(`/articles?${searchParams.toString()}`);
-  return response.data?.[0] as Article | undefined;
+  try {
+    const response = await strapi.find('articles', {
+      filters: {
+        slug: {
+          $eq: slug,
+        },
+      },
+      populate,
+    });
+    
+    return response.data?.[0] as Article | undefined;
+  } catch (error) {
+    console.error('Error fetching article:', error);
+    throw error;
+  }
 }
 
 export async function getCategories() {
-  const response = await fetchAPI('/categories');
-  return response.data as Category[];
+  try {
+    const response = await strapi.find('categories');
+    return response.data as Category[];
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    throw error;
+  }
 }
 
 export async function getAuthors() {
-  const response = await fetchAPI('/authors');
-  return response.data as Author[];
+  try {
+    const response = await strapi.find('authors');
+    return response.data as Author[];
+  } catch (error) {
+    console.error('Error fetching authors:', error);
+    throw error;
+  }
 }
+
+export { strapi };
+

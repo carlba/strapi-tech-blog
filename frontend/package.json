@@ -9,6 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@heroui/react": "^2.8.7",
+    "@strapi/client": "^1.6.0",
+    "framer-motion": "^12.26.2",
     "isomorphic-dompurify": "^2.35.0",
     "next": "16.1.2",
     "react": "19.2.3",

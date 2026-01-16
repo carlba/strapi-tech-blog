@@ -1,6 +1,6 @@
 # Strapi Tech Blog
 
-A modern tech blog built with Next.js and Strapi CMS.
+A modern tech blog built with Next.js and Strapi CMS, featuring HeroUI components and the official Strapi SDK.
 
 ## Quick Start
 
@@ -34,8 +34,9 @@ This project consists of two main parts:
 - 👤 Author profiles
 - 🏷️ Category organization
 - 🖼️ Image uploads for cover images and avatars
-- 📱 Responsive design with Tailwind CSS
+- 📱 Responsive design with Tailwind CSS and HeroUI components
 - 🚀 Server-side rendering with Next.js
+- 🔌 Official Strapi SDK for type-safe API calls
 
 ## Getting Started
 

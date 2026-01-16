@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import DOMPurify from 'isomorphic-dompurify';
+import { Card, CardBody, Chip, Button, Avatar, Divider } from '@heroui/react';
 import { getArticleBySlug } from '@/lib/strapi';
 
 export default async function ArticlePage({
@@ -27,14 +28,20 @@ export default async function ArticlePage({
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/" className="text-blue-600 hover:text-blue-800">
+          <Button
+            as={Link}
+            href="/"
+            color="primary"
+            variant="light"
+            size="sm"
+          >
             ← Back to articles
-          </Link>
+          </Button>
         </div>
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <article className="bg-white rounded-lg shadow-md overflow-hidden">
+        <Card className="overflow-hidden">
           {article.coverImage && (
             <div className="aspect-video bg-gray-200">
               <img
@@ -45,15 +52,16 @@ export default async function ArticlePage({
             </div>
           )}
           
-          <div className="p-8">
-            <div className="flex gap-2 mb-4">
+          <CardBody className="p-8">
+            <div className="flex gap-2 mb-4 flex-wrap">
               {article.categories?.map((category) => (
-                <span
+                <Chip
                   key={category.slug}
-                  className="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded"
+                  color="primary"
+                  variant="flat"
                 >
                   {category.name}
-                </span>
+                </Chip>
               ))}
             </div>
 
@@ -65,14 +73,19 @@ export default async function ArticlePage({
               <p className="text-xl text-gray-600 mb-6">{article.excerpt}</p>
             )}
 
-            <div className="flex items-center gap-4 mb-8 pb-8 border-b border-gray-200">
+            <div className="flex items-center gap-4 mb-8">
               {article.author && (
                 <>
-                  {article.author.avatar && (
-                    <img
+                  {article.author.avatar ? (
+                    <Avatar
                       src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${article.author.avatar.url}`}
                       alt={article.author.name}
-                      className="w-12 h-12 rounded-full"
+                      size="lg"
+                    />
+                  ) : (
+                    <Avatar
+                      name={article.author.name}
+                      size="lg"
                     />
                   )}
                   <div>
@@ -91,12 +104,14 @@ export default async function ArticlePage({
               )}
             </div>
 
+            <Divider className="mb-8" />
+
             <div 
               className="prose prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: sanitizedContent }}
             />
-          </div>
-        </article>
+          </CardBody>
+        </Card>
       </main>
     </div>
   );

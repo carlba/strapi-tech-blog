@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Card, CardHeader, CardBody, CardFooter, Chip, Divider } from '@heroui/react';
 import { getArticles } from '@/lib/strapi';
 
 export default async function Home() {
@@ -27,21 +28,19 @@ export default async function Home() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {error ? (
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-            <div className="flex">
-              <div className="ml-3">
-                <p className="text-sm text-yellow-700">
-                  {error}
-                </p>
-                <p className="mt-2 text-sm text-yellow-700">
-                  Make sure the Strapi backend is running at{' '}
-                  <code className="bg-yellow-100 px-1 rounded">
-                    {process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}
-                  </code>
-                </p>
-              </div>
-            </div>
-          </div>
+          <Card className="bg-yellow-50 border-l-4 border-yellow-400">
+            <CardBody>
+              <p className="text-sm text-yellow-700">
+                {error}
+              </p>
+              <p className="mt-2 text-sm text-yellow-700">
+                Make sure the Strapi backend is running at{' '}
+                <code className="bg-yellow-100 px-1 rounded">
+                  {process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}
+                </code>
+              </p>
+            </CardBody>
+          </Card>
         ) : articles.length === 0 ? (
           <div className="text-center py-12">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">No articles yet</h2>
@@ -60,25 +59,29 @@ export default async function Home() {
         ) : (
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {articles.map((article) => (
-              <article key={article.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                {article.coverImage && (
-                  <div className="aspect-video bg-gray-200">
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${article.coverImage.url}`}
-                      alt={article.coverImage.alternativeText || article.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
-                <div className="p-6">
-                  <div className="flex gap-2 mb-3">
+              <Card key={article.id} className="hover:shadow-lg transition-shadow" isPressable>
+                <CardHeader className="flex-col items-start p-0">
+                  {article.coverImage && (
+                    <div className="w-full aspect-video bg-gray-200">
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${article.coverImage.url}`}
+                        alt={article.coverImage.alternativeText || article.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                </CardHeader>
+                <CardBody className="p-6">
+                  <div className="flex gap-2 mb-3 flex-wrap">
                     {article.categories?.map((category) => (
-                      <span
+                      <Chip
                         key={category.slug}
-                        className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                        color="primary"
+                        variant="flat"
+                        size="sm"
                       >
                         {category.name}
-                      </span>
+                      </Chip>
                     ))}
                   </div>
                   <h2 className="text-xl font-semibold text-gray-900 mb-2">
@@ -89,7 +92,9 @@ export default async function Home() {
                   {article.excerpt && (
                     <p className="text-gray-600 mb-4">{article.excerpt}</p>
                   )}
-                  <div className="flex items-center text-sm text-gray-500">
+                </CardBody>
+                <CardFooter className="pt-0 px-6 pb-6">
+                  <div className="flex items-center text-sm text-gray-500 w-full">
                     {article.author && <span>{article.author.name}</span>}
                     {article.author && article.publishedDate && <span className="mx-2">•</span>}
                     {article.publishedDate && (
@@ -98,8 +103,8 @@ export default async function Home() {
                       </span>
                     )}
                   </div>
-                </div>
-              </article>
+                </CardFooter>
+              </Card>
             ))}
           </div>
         )}
