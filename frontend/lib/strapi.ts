@@ -1,9 +1,9 @@
-import { strapi as strapiClient } from '@strapi/client';
+import { strapi as createStrapiClient } from '@strapi/client';
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
 
 // Initialize Strapi SDK client
-const strapi = strapiClient({
+const strapi = createStrapiClient({
   baseURL: STRAPI_URL,
 });
 
